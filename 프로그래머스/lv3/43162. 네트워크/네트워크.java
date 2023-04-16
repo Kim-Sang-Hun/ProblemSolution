@@ -30,16 +30,11 @@ class Solution {
             }
             list.add(arr);
         }
-        int[] linked = new int[n];
         boolean[] visited = new boolean[n];
         for (int i = 0; i < n; i++) {
             if (checkNetwork(list, i, visited)) {
                 cnt++;
             }
-        }
-
-        if (cnt == 0) {
-            return 1;
         }
 
         return cnt;
