@@ -40,22 +40,6 @@ public class Main {
 		}
 	}
 
-	private static int deOperate(int a, int b, char op) {
-		switch (op) {
-		case '+':
-			return a - b;
-		case '-':
-			return a + b;
-		case '*':
-			if (b == 0) {
-				return 0;
-			}
-			return a / b;
-		default:
-			return 0;
-		}
-	}
-
 	private static void bfs(int last, int now, int depth, boolean inParens) {
 		if (depth == len / 2) {
 			max = Math.max(now, max);
