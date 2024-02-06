@@ -4,7 +4,7 @@ import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
 public class Solution {
-	
+
 	static int N, M, max;
 	static int[] snacks;
 
@@ -23,17 +23,15 @@ public class Solution {
 				snacks[j] = Integer.parseInt(st.nextToken());
 			}
 			max = -1;
-			for (int j = 0; j < N; j++) {
-				for (int k = 0; k < N; k++) {
-					if (j != k) {
-						int tmp = snacks[j] + snacks[k];
-						if (tmp <= M) {
-							max = Math.max(max, tmp);
-						}
+			for (int j = 0; j < N - 1; j++) {
+				for (int k = j + 1; k < N; k++) {
+					int tmp = snacks[j] + snacks[k];
+					if (tmp <= M) {
+						max = Math.max(max, tmp);
 					}
 				}
 			}
-			
+
 			sb.append("#").append(i + 1).append(" ").append(max).append(System.lineSeparator());
 		}
 		System.out.print(sb);
