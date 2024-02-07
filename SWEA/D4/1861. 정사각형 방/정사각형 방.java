@@ -6,7 +6,7 @@ import java.util.Arrays;
 public class Solution {
 
 	static int N, start, max;
-	static int[][] map;
+	static int[][] map, dp;
 	static int[][] dirs = { { 0, 1 }, { 1, 0 }, { 0, -1 }, { -1, 0 } };
 
 	public static int dfs(int y, int x, int count) {
@@ -15,7 +15,8 @@ public class Solution {
 			int nX = x + dirs[i][1];
 
 			if (nY >= N || nX >= N || nY < 0 || nX < 0 || map[nY][nX] - map[y][x] != 1) continue;
-			return dfs(nY, nX, count + 1);
+			dp[y][x] = dfs(nY, nX, count + 1);
+			return dp[y][x];
 		}
 		return count;
 	}
@@ -27,6 +28,7 @@ public class Solution {
 		for (int tc = 1; tc <= T; tc++) {
 			N = Integer.parseInt(br.readLine());
 			map = new int[N][];
+			dp = new int[N][N];
 			max = 0;
 			start = Integer.MAX_VALUE;
 			for (int i = 0; i < N; i++) {
@@ -34,6 +36,9 @@ public class Solution {
 			}
 			for (int i = 0; i < N; i++) {
 				for (int j = 0; j < N; j++) {
+					if (dp[i][j] != 0) {
+						continue;
+					}
 					int tmp = dfs(i, j, 1);
 					if (max == tmp) {
 						max = tmp;
