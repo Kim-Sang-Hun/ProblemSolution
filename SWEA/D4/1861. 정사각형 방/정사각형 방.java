@@ -10,6 +10,9 @@ public class Solution {
 	static int[][] dirs = { { 0, 1 }, { 1, 0 }, { 0, -1 }, { -1, 0 } };
 
 	public static int dfs(int y, int x, int count) {
+		if (dp[y][x] != 0) {
+			return count - 1 + dp[y][x];
+		}
 		for (int i = 0; i < dirs.length; i++) {
 			int nY = y + dirs[i][0];
 			int nX = x + dirs[i][1];
