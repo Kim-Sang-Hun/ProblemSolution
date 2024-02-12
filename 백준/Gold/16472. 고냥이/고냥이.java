@@ -1,8 +1,6 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.HashMap;
-import java.util.Map;
 
 public class Main {
 
@@ -10,28 +8,24 @@ public class Main {
     BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
     int N = Integer.parseInt(br.readLine());
     String catSound = br.readLine();
-    Map<Character, Integer> map = new HashMap<>();
-    for (int i = 0; i < 26; i++) {
-      map.put((char)(i + 'a'), 0);
-    }
-    int var = 0;
+    int[] charCount = new int[26];
+
+    int alphaCnt = 0;
     int len = 0;
     int maxLen = 0;
 
     for (int i = 0; i < catSound.length(); i++) {
-      if (map.get(catSound.charAt(i)) == 0) {
-        ++var;
-        ++len;
-      } else {
-        ++len;
+      int charIdx = catSound.charAt(i) - 'a';
+      if (charCount[charIdx]++ == 0) {
+        ++alphaCnt;
       }
-      map.put(catSound.charAt(i), map.get(catSound.charAt(i)) + 1);
-      while (var > N) {
-        int removeIdx = i - len + 1;
-        map.put(catSound.charAt(removeIdx), map.get(catSound.charAt(removeIdx)) - 1);
+      ++len;
+      while (alphaCnt > N) {
+        int removeIdx = catSound.charAt(i - len + 1) - 'a';
+        --charCount[removeIdx];
         --len;
-        if (map.get(catSound.charAt(removeIdx)) == 0) {
-          --var;
+        if (charCount[removeIdx] == 0) {
+          --alphaCnt;
         }
       }
       maxLen = Math.max(maxLen, len);
