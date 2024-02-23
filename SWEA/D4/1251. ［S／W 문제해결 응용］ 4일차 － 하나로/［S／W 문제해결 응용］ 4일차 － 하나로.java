@@ -69,7 +69,7 @@ public class Solution {
 				Edge cur = pq.poll();
 				
 				if (visited[cur.to]) continue;
-				if (++count == N + 1) break;
+				if (count++ == N) break;
 				Island curIsland = islands[cur.to];
 				visited[cur.to] = true;
 				minTotalLevy += cur.weight;
