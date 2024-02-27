@@ -4,40 +4,48 @@ import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
 public class Main {
-    public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int N = Integer.parseInt(br.readLine());
-        int[][] cost = new int[N][3];
-        int[][] DP = new int[N][3];
 
-        StringTokenizer st;
-        for (int i = 0; i < N; i++) {
-            st = new StringTokenizer(br.readLine(), " ");
+	static int N;
+	static int[][] dp;
+	static int[][] map;
 
-            cost[i][0] = Integer.parseInt(st.nextToken());
-            cost[i][1] = Integer.parseInt(st.nextToken());
-            cost[i][2] = Integer.parseInt(st.nextToken());
-        }
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		N = Integer.parseInt(br.readLine());
+		dp = new int[N][3];
+		map = new int[N][3];
+		for (int i = 0; i < N; i++) {
+			StringTokenizer st = new StringTokenizer(br.readLine());
+			int R = Integer.parseInt(st.nextToken());
+			int G = Integer.parseInt(st.nextToken());
+			int B = Integer.parseInt(st.nextToken());
+			map[i][0] = R;
+			map[i][1] = G;
+			map[i][2] = B;
+		}
+		int R = getMin(N - 1, 0);
+		int G = getMin(N - 1, 1);
+		int B = getMin(N - 1, 2);
+		System.out.println(Math.min(Math.min(R, G), B));
+	}
 
-        DP[0][0] = cost[0][0];
-        DP[0][1] = cost[0][1];
-        DP[0][2] = cost[0][2];
-        
-        int answer = Math.min(Math.min(paint(N - 1, 0, DP, cost), paint(N - 1, 1, DP, cost)), paint(N - 1, 2, DP, cost));
+	private static int getMin(int depth, int color) {
+		if (depth == 0)
+			return map[0][color];
+		if (dp[depth][color] != 0) return dp[depth][color];
 
-        System.out.println(answer);
-    }
-
-    public static int paint(int N, int idx, int[][] DP, int[][] cost) {
-        if (DP[N][idx] == 0) {
-            if (idx == 0) {
-                DP[N][idx] = Math.min(paint(N - 1, 1, DP, cost), paint(N - 1, 2, DP, cost)) + cost[N][0];
-            } else if (idx == 1) {
-                DP[N][idx] = Math.min(paint(N - 1, 0, DP, cost), paint(N - 1, 2, DP, cost)) + cost[N][1];
-            } else if (idx == 2) {
-                DP[N][idx] = Math.min(paint(N - 1, 0, DP, cost), paint(N - 1, 1, DP, cost)) + cost[N][2];
-            }
-        }
-        return DP[N][idx];
-    }
+		if (color == 0) {
+			int G = dp[depth - 1][1] = getMin(depth - 1, 1);
+			int B = dp[depth - 1][2] = getMin(depth - 1, 2);
+			return Math.min(G, B) + map[depth][0];
+		} else if (color == 1) {
+			int R = dp[depth - 1][0] = getMin(depth - 1, 0);
+			int B = dp[depth - 1][2] = getMin(depth - 1, 2);
+			return Math.min(R, B) + map[depth][1];
+		} else {
+			int R = dp[depth - 1][0] = getMin(depth - 1, 0);
+			int G = dp[depth - 1][1] = getMin(depth - 1, 1);
+			return Math.min(R, G) + map[depth][2];
+		}
+	}
 }
