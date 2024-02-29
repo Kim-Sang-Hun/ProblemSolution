@@ -8,6 +8,14 @@ import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.StringTokenizer;
 
+/*
+ * 모든 사람에 대해 그 사람이
+ * 첫 번째 계단으로 가는 경우와 두 번째 계단으로 가는 경우를 모두 구해본다.
+ * 그런 후에 질문의 조건에 맞춰 걸리는 시간을 계산하고 최소값을 제출한다.
+ * 
+ */
+
+
 public class Solution {
 	
 	static int N;
