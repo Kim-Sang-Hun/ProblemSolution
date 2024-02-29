@@ -16,7 +16,6 @@ public class Main {
 		K = Integer.parseInt(st.nextToken());
 		values = new int[N];
 		dp = new int[K + 1];
-		Arrays.sort(values);
 		dp[0] = 1;
 		for (int i = 0; i < N; i++) {
 			values[i] = Integer.parseInt(br.readLine());
