@@ -1,97 +1,102 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 import java.util.StringTokenizer;
 
 public class Main {
 
-	static int N, M, safeSpot, spreadVirus, maxSafeSpot;
+	static int N, M;
 	static int[][] map;
-	static int[] dirY = {0, 0, -1, 1};
-	static int[] dirX = {-1, 1, 0, 0};
-	static boolean[][] visited;
-	static int[] walls;
+	static Point[] target = new Point[3];
+	static int[] dy = {0, -1, 0, 1};
+	static int[] dx = {1, 0, -1, 0};
+	static List<Point> candidates;
+	static List<Point> virus;
+	static int maxSafePlace;
+	
+	public static class Point {
+		int y, x;
 
+		public Point(int y, int x) {
+			this.y = y;
+			this.x = x;
+		}
+	}
+	
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st = new StringTokenizer(br.readLine());
 		N = Integer.parseInt(st.nextToken());
 		M = Integer.parseInt(st.nextToken());
 		map = new int[N][M];
-		walls = new int[3];
-		maxSafeSpot = Integer.MIN_VALUE;
+		candidates = new ArrayList<>();
+		virus = new ArrayList<>();
 		for (int i = 0; i < N; i++) {
 			st = new StringTokenizer(br.readLine());
 			for (int j = 0; j < M; j++) {
 				map[i][j] = Integer.parseInt(st.nextToken());
-				if (map[i][j] == 0) {
-					++safeSpot;
-				}
+				if (map[i][j] == 0) candidates.add(new Point(i, j));
+				if (map[i][j] == 2) virus.add(new Point(i, j));
 			}
 		}
-		safeSpot -= 3;
-		combi(0, 0);
-		System.out.println(maxSafeSpot);
+		makeTarget(0, 0);
+		System.out.println(maxSafePlace);
 	}
 
-	public static void combi(int count, int start) {
-		if (count == 3) {
-			for (int i = 0; i < walls.length; i++) {
-				map[walls[i] / M][walls[i] % M] = 1;
-			}
-			bfs();
-			for (int i = 0; i < walls.length; i++) {
-				map[walls[i] / M][walls[i] % M] = 0;
-			}
-			int tmpSafeSpot = safeSpot - spreadVirus;
-			if (maxSafeSpot < tmpSafeSpot) {
-				maxSafeSpot = tmpSafeSpot;
-			}
+	private static void makeTarget(int cnt, int start) {
+		if (cnt == 3) {
+			getSafeSpot();
 			return;
 		}
-
-		for (int i = start; i < N * M; i++) {
-			if (map[i / M][i % M] == 0) {
-				walls[count] = i;
-				combi(count + 1, i + 1);
-			}
+		for (int i = start; i < candidates.size(); i++) {
+			target[cnt] = candidates.get(i);
+			makeTarget(cnt + 1, i + 1);
 		}
-
 	}
 
-	public static void bfs() {
-		Queue<int[]> q = new LinkedList<>();
-		visited = new boolean[N][M];
-		spreadVirus = 0;
-
+	private static void getSafeSpot() {
+		int[][] clone = new int[N][];
+		for (int i = 0; i < clone.length; i++) {
+			clone[i] = map[i].clone();
+		}
+		
+		for (int i = 0; i < target.length; i++) {
+			int ty = target[i].y;
+			int tx = target[i].x;
+			clone[ty][tx] = 1;
+		}
+		Queue<Point> qu = new LinkedList<>();
+		for (int i = 0; i < virus.size(); i++) {
+			qu.add(virus.get(i));
+		}
+		while (!qu.isEmpty()) {
+			Point cur = qu.poll();
+			
+			for (int i = 0; i < 4; i++) {
+				int ny = cur.y + dy[i];
+				int nx = cur.x + dx[i];
+				if (!isValid(clone, ny, nx)) continue;
+				clone[ny][nx] = 2;
+				qu.add(new Point(ny, nx));
+			}
+		}
+		int count = 0;
 		for (int i = 0; i < N; i++) {
 			for (int j = 0; j < M; j++) {
-				if (map[i][j] == 2) {
-					visited[i][j] = true;
-					q.add(new int[] { i, j });
-				}
+				if (clone[i][j] == 0) ++count;
 			}
 		}
-
-		while (!q.isEmpty()) {
-			if (safeSpot - spreadVirus < maxSafeSpot) return;
-			int[] tmp = q.poll();
-
-			for (int i = 0; i < 4; i++) {
-				int nY = tmp[0] + dirY[i];
-				int nX = tmp[1] + dirX[i];
-
-				if (nY >= N || nX >= M || nY < 0 || nX < 0 || visited[nY][nX])
-					continue;
-				if (map[nY][nX] != 0)
-					continue;
-				++spreadVirus;
-				visited[nY][nX] = true;
-				q.add(new int[] { nY, nX });
-			}
-
-		}
+		maxSafePlace = Math.max(maxSafePlace, count);
 	}
+	
+	private static boolean isValid(int[][] map, int y, int x) {
+		if (y >= N || y < 0 || x >= M || x < 0 
+				|| map[y][x] != 0) return false;
+		return true;
+	}
+
 }
