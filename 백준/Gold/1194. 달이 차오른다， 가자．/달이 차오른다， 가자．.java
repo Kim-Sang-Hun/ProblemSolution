@@ -27,9 +27,6 @@ public class Main {
 		}
 	}
 	
-	static Map<Character, Integer> keys = new HashMap<>();
-	static Map<Character, Integer> doors = new HashMap<>();
-	
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st = new StringTokenizer(br.readLine());
@@ -38,18 +35,6 @@ public class Main {
 		map = new char[n][m];
 		min = Integer.MAX_VALUE;
 		visited = new boolean[1<<6][n][m];
-		keys.put('a', 1);
-		keys.put('b', 2);
-		keys.put('c', 3);
-		keys.put('d', 4);
-		keys.put('e', 5);
-		keys.put('f', 6);
-		doors.put('A', 1);
-		doors.put('B', 2);
-		doors.put('C', 3);
-		doors.put('D', 4);
-		doors.put('E', 5);
-		doors.put('F', 6);
 		
 		Minsik start = null;
 		for (int i = 0; i < n; i++) {
@@ -85,16 +70,13 @@ public class Main {
 				visited[cur.key][ny][nx] = true;
 				char c = map[ny][nx];
 				int nextKey = cur.key;
-				if (keys.containsKey(c)) {
+				if (c >= 'a' && c <= 'f') {
 					nextKey |= 1 << (c - 'a');
-				} else if (doors.containsKey(c)) {
+				} else if (c >= 'A' && c <= 'F') {
 					if ((nextKey & (1 << (c - 'A'))) == 0) continue;
 				}
 				qu.add(new Minsik(ny, nx, cur.time + 1, nextKey));
 			}
-			
 		}
-		
 	}
-
 }
