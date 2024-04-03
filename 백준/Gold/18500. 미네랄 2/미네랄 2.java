@@ -12,6 +12,7 @@ public class Main {
    static int r, c;
    static char[][] map;
    static boolean[][] visited;
+   static boolean modified;
    static int[] dy = {0, 1, 0, -1};
    static int[] dx = {1, 0, -1, 0};
 
@@ -46,15 +47,15 @@ public class Main {
             for (int j = 0; j < c; j++) {
                if (map[height][j] == 'x') {
                   map[height][j] = '.';
-                  visited = new boolean[r][c];
+                  modified = false;
                   if (j + 1 < c && map[height][j + 1] == 'x') {
                      checkAndFall(height, j + 1);
                   }
-                  visited = new boolean[r][c];
+                  if (modified) break;
                   if (height - 1 >= 0 && map[height - 1][j] == 'x') {
                      checkAndFall(height - 1, j);
                   }
-                  visited = new boolean[r][c];
+                  if (modified) break;
                   if (height + 1 < r && map[height + 1][j] == 'x') {
                      checkAndFall(height + 1, j);
                   }
@@ -65,15 +66,15 @@ public class Main {
             for (int j = c - 1; j >= 0; j--) {
                if (map[height][j] == 'x') {
                   map[height][j] = '.';
-                  visited = new boolean[r][c];
+                  modified = false;
                   if (j - 1 >= 0 && map[height][j - 1] == 'x') {
                      checkAndFall(height, j - 1);
                   }
-                  visited = new boolean[r][c];
+                  if (modified) break;
                   if (height - 1 >= 0 && map[height - 1][j] == 'x') {
                      checkAndFall(height - 1, j);
                   }
-                  visited = new boolean[r][c];
+                  if (modified) break;
                   if (height + 1 < r && map[height + 1][j] == 'x') {
                      checkAndFall(height + 1, j);
                   }
@@ -93,9 +94,7 @@ public class Main {
    }
 
    public static void checkAndFall(int y, int x) {
-      if (visited[y][x]) {
-         return;
-      }
+      visited = new boolean[r][c];
       visited[y][x] = true;
       Queue<Mineral> qu = new ArrayDeque<>();
       List<Mineral> list = new ArrayList<>();
@@ -124,6 +123,7 @@ public class Main {
             qu.add(next);
          }
       }
+      if (!touchBottom) modified = true;
       while (!touchBottom) {
          for (Mineral mi : list) {
             map[mi.y++][mi.x] = '.';
