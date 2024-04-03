@@ -102,7 +102,6 @@ public class Main {
       list.add(m);
       qu.add(m);
 
-      boolean touchBottom = false;
       while (!qu.isEmpty()) {
          Mineral cur = qu.poll();
 
@@ -111,8 +110,7 @@ public class Main {
             int nx = cur.x + dx[i];
 
             if (ny >= r) {
-               touchBottom = true;
-               continue;
+               return;
             }
             if (ny < 0 || nx >= c || nx < 0 || map[ny][nx] == '.' || visited[ny][nx]) {
                continue;
@@ -123,7 +121,8 @@ public class Main {
             qu.add(next);
          }
       }
-      if (!touchBottom) modified = true;
+      modified = true;
+      boolean touchBottom = false;
       while (!touchBottom) {
          for (Mineral mi : list) {
             map[mi.y++][mi.x] = '.';
