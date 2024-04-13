@@ -1,40 +1,24 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.StringTokenizer;
 
+/*
+트리라면 개념적으로 간선은 무조건 단절선이다. 사이클이 존재하지 않기 때문이다.
+점을 없앴을 때 단절점이려면 그 점과 연결된 간선이 두개 이상이어야 한다. 하나만 연결되어있다면(끝점이라면) 단절점이 아니다.
+ */
 public class Main {
-
-   static class Edge {
-      int from, to;
-
-      public Edge(int from, int to) {
-         this.from = from;
-         this.to = to;
-      }
-   }
 
    public static void main(String[] args) throws IOException {
       BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
       int N = Integer.parseInt(br.readLine());
       StringTokenizer st;
       int[] count = new int[N + 1];
-      Edge[] order = new Edge[N];
-      List<List<Integer>> edges = new ArrayList<>();
-      for (int i = 0; i <= N; i++) {
-         edges.add(new ArrayList<>());
-      }
 
       for (int i = 1; i < N; i++) {
          st = new StringTokenizer(br.readLine());
          int from = Integer.parseInt(st.nextToken());
          int to = Integer.parseInt(st.nextToken());
-         edges.get(from).add(to);
-         edges.get(to).add(from);
-         Edge cur = new Edge(from, to);
-         order[i] = cur;
          count[from]++;
          count[to]++;
       }
