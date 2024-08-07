@@ -20,6 +20,7 @@ public class Main {
 		map = new int[n + 1][n + 1];
 		for (int i = 1; i <= n; i++) {
 			Arrays.fill(map[i], max);
+			map[i][i] = 0;
 		}
 		for (int i = 0; i < m; i++) {
 			st = new StringTokenizer(br.readLine());
@@ -29,17 +30,17 @@ public class Main {
 			map[to][from] = 1;
 		}
 
-		for (int i = 1; i < n; i++) {
-			for (int j = i + 1; j <= n; j++) {
+		for (int i = 1; i <= n; i++) {
+			for (int j = 1; j <= n; j++) {
 				for (int k = 1; k <= n; k++) {
-					map[j][k] = map[k][j] = Math.min(map[j][k], map[j][i] + map[i][k]);
+					map[j][k] = Math.min(map[j][k], map[j][i] + map[i][k]);
 				}
 			}
 		}
 
 		min = max;
 
-		for (int i = 1; i < n; i++) {
+		for (int i = 1; i <= n; i++) {
 			for (int j = i + 1; j <= n; j++) {
 				sum = 0;
 				for (int k = 1; k <= n; k++) {
